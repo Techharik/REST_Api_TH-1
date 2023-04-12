@@ -86,6 +86,16 @@ app.route('/articles/:customArticle')
    })
 })
 
+.patch((req,res)=>{
+    // console.log(req.body)
+    Article.updateOne(
+         {title:req.params.customArticle}
+        ,{$set:req.body}
+        ).then((result)=>{
+            res.send(result)
+        })
+})
+
 
 app.get('/',(req,res)=>{
     res.send('HAI');
