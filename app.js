@@ -96,6 +96,11 @@ app.route('/articles/:customArticle')
         })
 })
 
+.delete((req,res)=>{
+    Article.deleteOgtine({title:req.params.customArticle}).then((result)=>{
+        res.send(result)
+    })
+})
 
 app.get('/',(req,res)=>{
     res.send('HAI');
