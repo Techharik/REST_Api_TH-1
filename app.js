@@ -23,13 +23,9 @@ const articleSchema= new Schema({
 
 const Article = model('article',articleSchema);
 
+app.route('/articles')
 
-app.get('/',(req,res)=>{
-    res.send('HAI');
-})
-
-
-app.get('/articles',async function(req,res){
+.get(async function(req,res){
 
     //Two ways to find an data in database - promises and async and await:
 
@@ -39,13 +35,61 @@ app.get('/articles',async function(req,res){
 
     const articles = await Article.find({})
     // const  data= await articles.json();
-//    res.send(articles)
+   res.send(articles)
+})
+
+.post(async (req,res)=>{
+    console.log(req.body.title);
+    console.log(req.body.contant)
+  
+   const newArticle = new Article({
+      title:req.body.title,
+      Contant:req.body.contant
+   })
+  
+   try{
+     await newArticle.save()
+     res.send('Successfully Created')
+   }catch{
+      res.send('Failed to add')
+   }
+  
+  })
+
+  .delete(async (req,res)=>{
+    try{
+        await Article.deleteMany()
+        res.send('Successfully Deleted');
+    }catch{
+        res.send('faild to delete')
+    }
+})
+
+app.route('/articles/:customArticle')
+
+.get((req,res)=>{
+    const customArticle = req.params.customArticle;
+   Article.findOne({title:customArticle}).then((article)=>{
+      if(article){
+        res.send(article)
+      }
+   })
+})
+
+.put((req,res)=>{
+   Article.replaceOne(
+    {title:req.params.customArticle},
+    {title:req.body.title,
+    Contant:req.body.contant}
+   ).then((response)=>{
+    res.send(response)
+   })
 })
 
 
-
-
-
+app.get('/',(req,res)=>{
+    res.send('HAI');
+})
 
 
 app.listen(3000,function(){
